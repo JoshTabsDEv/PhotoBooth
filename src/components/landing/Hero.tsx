@@ -22,6 +22,12 @@ export function Hero() {
 
     const tl = gsap.timeline({ delay: 0.5 });
 
+    // Declare split text instances for cleanup
+    let mainSplit: any = null;
+    let gradientSplit: any = null;
+    let paragraphSplit: any = null;
+    let innerLines: any = null;
+
     // Split main h1 text into characters
     const mainTextNode = h1Ref.current.childNodes[0];
     if (mainTextNode && mainTextNode.nodeType === Node.TEXT_NODE) {
@@ -29,7 +35,7 @@ export function Hero() {
       tempSpan.textContent = mainTextNode.textContent;
       mainTextNode.parentNode?.replaceChild(tempSpan, mainTextNode);
 
-      const mainSplit = new SplitText(tempSpan, {
+      mainSplit = new SplitText(tempSpan, {
         type: 'chars',
         charsClass: 'inline-block'
       });
@@ -45,11 +51,11 @@ export function Hero() {
     }
 
     // Gradient span text scramble effect
-    const gradientSplit = new SplitText(gradientSpanRef.current, {
+    gradientSplit = new SplitText(gradientSpanRef.current, {
       type: 'chars',
       charsClass: 'inline-block'
     });
-    const originalChars = gradientSplit.chars.map(char => char.textContent);
+    const originalChars = gradientSplit.chars.map((char: any) => char.textContent);
     const glyphs = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*';
 
     tl.from(gradientSplit.chars, {
@@ -57,7 +63,7 @@ export function Hero() {
       duration: 0.01,
       stagger: 0.02,
       onStart: function() {
-        gradientSplit.chars.forEach((char, i) => {
+        gradientSplit.chars.forEach((char: any, i: number) => {
           const scrambleCount = 8;
           for (let j = 0; j < scrambleCount; j++) {
             gsap.delayedCall(j * 0.05, () => {
@@ -73,12 +79,12 @@ export function Hero() {
     }, '-=0.3');
 
     // Paragraph line reveal
-    const paragraphSplit = new SplitText(paragraphRef.current, {
+    paragraphSplit = new SplitText(paragraphRef.current, {
       type: 'lines',
       linesClass: 'overflow-hidden'
     });
 
-    const innerLines = new SplitText(paragraphRef.current, {
+    innerLines = new SplitText(paragraphRef.current, {
       type: 'lines',
       linesClass: 'inline-block'
     });
@@ -101,7 +107,7 @@ export function Hero() {
     }, '-=0.3');
 
     return () => {
-      if (mainTextNode) mainSplit?.revert();
+      mainSplit?.revert();
       gradientSplit?.revert();
       paragraphSplit?.revert();
       innerLines?.revert();
